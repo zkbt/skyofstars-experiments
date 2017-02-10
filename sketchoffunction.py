@@ -11,4 +11,4 @@ def convertTGASfile(filename):
         +ra vs dec
       -save these plots to files (whose names depend on the input "filename")
       -save a text file that contains X, Y, Z positions and aboslute magnitudes
-      
+    '''
