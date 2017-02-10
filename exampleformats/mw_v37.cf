@@ -1,0 +1,898 @@
+## DIGITAL UNIVERSE ATLAS version 3
+## American Museum of Natural History and Hayden Planetarium
+## http://www.haydenplanetarium.org/
+##
+## The Digital Universe is funded by NASA.
+## Use of these data is subject to the terms of the License.
+##
+## Milky Way Atlas: Config file
+## Prepared by: Brian Abbott, Carter Emmart (AMNH/Hayden)
+##
+## SolarSystem and Galactic components Removed by: Robert Calusdian (Sky-Skan)
+##
+## ========================================================================
+
+# tell Partiview where the data files are...
+filepath +:.:..:./data:./images:./images/dso
+
+
+##
+## AMNH's Stellar Catalog
+## -------------------------------------------------------------------------
+##
+object g1=stars                      # define group 1 and call it 'stars'
+
+include stars_v37.speck                  # load the speck and label files
+include stars_v37.label
+eval psize 2                         # commands that describe the points
+eval ptsize 0.01 2
+eval points on
+eval lum lum 0 1                     # commands that describe the brightness
+eval slum 0.002
+eval cmap colorbv.cmap               # set the color for the particles
+eval color color -0.5 2.0
+eval polylumvar point-size area      # commands for the polygons
+eval polysize 0.4
+eval polysides 4
+eval polymin 1 
+eval alpha 1.0
+eval poly on
+eval lsize 0.3                       # commands that describe the labels
+eval labelmin 28
+eval textcment 1 .3 .3 .3
+eval laxes off
+eval label on
+
+warp -extrap vx   -z 0 -p 100 -seconds
+
+##
+## Define some boxes
+##
+# Box around Gould's Belt
+eval boxcment 1 1.0 0.5 0.2                 # box 1 color
+box -n 1 -l 1  -400,-200,-200 400,200,100   # define box 1, color 1
+#eval clipbox -400,-200,-200 400,200,100     # define a clipbox too
+
+# Box around open clusters
+eval boxcment 2 .7 .7 0                              # box 2 color
+box -n 2 -l 2 -42.3526,-0.2567,-17.1208 3.5,3.5,3.5  # Hyades box
+eval boxcment 3 .7 .7 0                              # box 3 color
+box -n 3 -l 3 -100.925,24.8265,-45.9453 6,3,3        # Pleiades box
+
+eval hidebox 1 2                     # hide boxes 1 and 2
+eval showbox 2                       # then show box 2 (3 is showing too)
+
+eval box off                         # start milkyway with all boxes off  
+#eval cb off
+
+
+###
+### Selection expressions
+###
+eval thresh colorb_v -1 0        # to see just the blue stars
+eval sel blue = thresh
+
+eval thresh colorb_v 0 1         # to see the red stars
+eval sel red = thresh
+
+eval thresh appmag -30 6.5       # see all the naked-eye stars
+eval sel eye = thresh
+
+eval thresh appmag < 7.5         # to see the stars of m<7.5
+eval sel m75 = thresh            #   (this is the completeness limit)
+
+eval only= dcalc 1               # to see only the trig parallax stars
+eval sel trig = thresh
+
+eval only= dcalc 2               # to see only the weighted mean stars
+eval sel weighted = thresh
+
+eval thresh absmag -10 -3        # see all the intrinsically bright stars
+eval sel bright = thresh
+
+eval thresh absmag 0 10          # see the intrinsically faint stars
+eval sel faint = thresh
+
+eval thresh distly < 100         # see all stars within 100 light-years
+eval sel 100ly = thresh
+
+eval thresh distly < 500         # see all stars within 500 light-years
+eval sel nearby = thresh
+
+
+eval thresh spindex 0 9         # see all the O stars
+eval sel ostars = thresh
+
+eval thresh spindex 10 19       # see all the B stars
+eval sel bstars = thresh
+
+eval thresh spindex 20 29       # see all the A stars
+eval sel astars = thresh
+
+eval thresh spindex 30 39       # see all the F stars
+eval sel fstars = thresh
+
+eval thresh spindex 40 49       # see all the G stars
+eval sel gstars = thresh
+
+eval thresh spindex 50 59       # see all the K stars
+eval sel kstars = thresh
+
+eval thresh spindex 60 69       # see all the M stars
+eval sel mstars = thresh
+
+eval only= lumindex 1           # see all the supergiant stars
+eval sel supergiants = thresh
+
+eval only= lumindex 2           # see all the bright giant stars
+eval sel brightgiants = thresh
+
+eval only= lumindex 3           # see all the giant stars
+eval sel giants = thresh
+
+eval only= lumindex 4           # see all the subgiant stars
+eval sel subgiants = thresh
+
+eval only= lumindex 5           # see all the main sequence stars
+eval sel msdwarfs = thresh
+
+eval only= lumindex 6           # see all the subdwarf stars
+eval sel subdwarfs = thresh
+
+
+
+eval see all                # start by seeing all the stars
+eval off                     # data group is on at start-up
+
+
+
+##
+## Alternate Labels for the stars
+## ------------------------------------------------------------------------
+##
+object g2=AltLabel
+
+include stars-altlbl_v37.label
+eval alpha 0.7
+eval lsize 0.3
+eval labelmin 28
+eval textcment 1 .4 .4 .4
+eval laxes off
+eval label on
+eval off
+
+
+##
+## Visible Milky Way
+## ------------------------------------------------------------------------
+##
+object g3=MWVisible
+
+include mw-visible.speck
+eval alpha 0.5
+eval off
+
+
+##
+## Constellation lines
+## ------------------------------------------------------------------------
+##
+object g4=Constellations
+
+include constellations_v37.speck
+include constellations_v37.label
+eval cment 1 0.7 0.2 0.2	# color for the majority of constellations
+eval cment 2 0.6 0.6 0.1	# color for zodiacal constellations
+eval cment 3 0.0 0.3 0.8        # color for Ursa Major and Orion
+eval alpha 0.6
+eval textcment 1 0.64 0.24 0.24
+eval lsize 0.6
+eval laxes off
+eval labels off
+eval off
+
+
+##
+## Oort Sphere
+## ------------------------------------------------------------------------
+##
+object g5=OortCloud
+
+include oort.speck
+eval cment 1 .8 .4 .4
+eval alpha 0.3
+eval lsize 0.5
+eval textcment 1 0.5 0.2 0.2
+eval laxes off
+eval labels off
+
+eval tfm -0.05487554 0.4941095 -0.8676661 0 -0.9938214 -0.1109906 -0.0003515167 0 -0.09647644 0.8622859 0.4971472 0 0 0 0 1
+
+eval off
+
+
+##
+## Celestial Coord Sphere
+## ------------------------------------------------------------------------
+##
+object g6=RadioSphere
+
+include radec.speck
+eval cment 1 0.05 0.05 0.45
+eval cment 2 0 0 0
+eval cment 3 0 0 0.0
+eval alpha 0.5
+eval lsize 0.45
+eval textcment 1 1 1 1
+eval laxes off
+
+eval tfm -0.05487554 0.4941095 -0.8676661 0 -0.8734371 -0.4448296 -0.1980764 0 -0.483835 0.7469823  0.4559838 0 0 0 0 1
+
+eval off
+
+##
+## Exoplanets
+## ------------------------------------------------------------------------
+##
+object g7=Exoplanets
+
+include expl_v37.speck
+include expl_v37.label
+eval psize 25000
+eval alpha 0.5
+eval ptsize 2 10
+eval points off
+eval lum const 1
+eval slum 0.3
+eval color const 1 1 1
+eval polylumvar point-size area
+eval polysize 2
+eval polymin 1 100
+eval polysides 4
+eval poly on
+eval lsize 0.5
+eval labelmin 20
+eval textcment 1 0.7 0.7 0.7
+eval laxes off
+eval labels on
+eval fast off
+eval off
+
+##
+## Distance Uncertainty for some stars
+## ------------------------------------------------------------------------
+##
+object g8=StarErrors
+
+include stars-err_v37.speck
+include stars-err_v37.label
+eval psize 1
+eval ptsize 5 10
+eval lum const 120
+eval slum 30
+eval color const 1 0 0
+eval polysize 2e-06
+eval polymin 0.5 3
+eval poly on
+eval lsize 0.4
+eval labelminpixels 8
+eval textcment 1 0.2 0.2 0.6
+eval laxes off
+eval labels on
+eval off
+
+
+##
+## Open Clusters
+## ------------------------------------------------------------------------
+##
+object g9=OpenClusters
+
+include oc.speck
+include oc.label
+eval psize 1
+eval ptsize 2 10
+eval lum const 120
+eval slum 2700
+eval color const 0.1 0.8 0.4
+eval polysize 1e-6
+eval polysides 12
+eval alpha 0.7
+eval poly on
+eval lsize 13.5
+eval labelmin 30
+eval textcment 1 0.05 0.4 0.2
+eval laxes off
+eval labels on
+eval fast off
+eval points on
+eval off
+
+eval thresh logage < 7
+eval sel young = thresh
+
+eval boxcment 1 .8 .6 .2
+box -n 1 -l 1 900,-2000,0 500,2200,200
+eval box off
+
+eval see all
+
+
+
+##
+## OB Associations
+## ------------------------------------------------------------------------
+##
+object g10=OBAssociations
+
+include ob.speck
+include ob.label
+eval psize 1
+eval ptsize 2 10
+eval lum lumin 0 1
+eval slum 200
+eval cmap ob.cmap
+eval color color exact
+eval polysize 0.22
+eval polysides 7
+eval poly on
+eval alpha 0.6
+eval labelsize 20
+eval labelmin 8
+eval textcment 1 0.4 0.5 1.0
+eval laxes off
+eval label on
+eval fast off
+eval points on
+eval off
+
+
+##
+## Globular Clusters
+## ------------------------------------------------------------------------
+##
+
+object g11=GlobularClusters
+
+include gc.speck
+include gc.label
+eval psize 1
+eval ptsize 2 10
+eval lum const 120
+eval slum 5000
+eval color const 0.8 0.8 0
+eval polysize 2e-5
+eval polysides 5
+eval alpha 0.85
+eval poly on
+eval lsize 130
+eval labelmin 5
+eval textcment 1 0.7 0.7 0.0
+eval laxes off
+eval label on
+eval fast off
+eval off
+
+# selection expressions
+# see the young clusters (with higher metallicity)
+eval thresh metal -1.0 1.0
+eval sel younggc = thresh
+
+# see the older clusters (with lower metallicity)
+eval thresh metal -2.0 -1.5
+eval sel oldgc = thresh
+
+eval see all
+
+
+##
+## Pulsars
+## ------------------------------------------------------------------------
+##
+
+object g12=Pulsars
+
+include pulsar.speck
+include pulsar.label
+eval psize 1
+eval ptsize 2 10
+eval points on
+eval lum const 120 
+eval slum 10000
+eval color const .9 0 0
+eval polysize 1e-06
+eval polysides 4
+eval alpha 1.0
+eval poly on
+eval lsize 13
+eval labelmin 30
+eval textcment 1 0.7 0 0
+eval laxes off
+eval label on
+eval fast off
+eval off
+
+
+
+##
+## Planetary Nebulae
+## ------------------------------------------------------------------------
+##
+object g13=PlanetaryNebulae
+
+include planneb.speck
+include planneb.label
+eval psize 1
+eval ptsize 2 10
+eval points on
+eval lum const 120
+eval slum 0.3
+eval color const 0.5 0.5 1.0
+eval polysize 0.023
+eval polysides 3
+eval alpha 1.0
+eval poly on
+eval lsize 16
+eval labelmin 30
+eval textcment 1 0.5 0.5 1.0
+eval laxes off
+eval label on
+eval points on
+eval fast off
+eval off
+
+
+
+##
+## HII Regions
+## ------------------------------------------------------------------------
+##
+object g14=HII
+
+include h2region.speck
+include h2region.label
+eval psize 1
+eval ptsize 2 10
+eval points on
+eval lum const 120
+eval slum 5000
+eval color const 0 0 1
+eval polysize 0.2e-05
+eval polysides 6
+eval alpha 1.0
+eval poly on
+eval points on
+eval lsize 20
+eval labelmin 28
+eval textcment 1 0.5 0.5 0.5
+eval laxes off
+eval label on
+eval fast off
+eval off
+
+
+##
+## Supernova Remnants
+## ------------------------------------------------------------------------
+##
+
+object g15=SuperNova
+
+include sn_remnant.speck
+include sn_remnant.label
+eval psize 1
+eval ptsize 2 10
+eval points on
+eval lum const 120 
+eval slum 5000
+eval color const 1 0.5 0
+eval polysize 0.5e-5
+eval polysides 7
+eval alpha 1.0
+eval poly on
+eval lsize 30
+eval labelmin 30
+eval textcment 1 0.6 0.3 0.0
+eval laxes off
+eval label on
+eval fast off
+eval off
+
+##
+## Orion Star Cluster
+## ------------------------------------------------------------------------
+##
+object g16=OrionStarCluster
+
+include ori_clust.speck
+eval psize 1000
+eval ptsize 0.001 3
+eval points on
+eval lum lum 0 1
+eval slum 400
+eval cmap colorbv.cmap
+eval color color -0.5 2.0
+eval color const 0.8 0.8 1.0
+eval polysize 0.000002
+eval polysides 4
+eval alpha 0.99
+eval polymin 1 96
+eval poly on
+eval off
+
+##
+## Some selected images of Deep Sky Objects
+## ------------------------------------------------------------------------
+##
+object g17=DeepSpaceObj
+
+include dso.speck
+include dso.label
+eval polysides 4
+eval txscale .5
+eval color const 0.1 0.1 0.1
+eval polylumvar radius
+eval polysize 1
+eval poly
+eval points off
+eval alpha .9
+eval textcment 1 0.1 0.4 0.6
+eval lsize 20
+eval tfm 0 0 0 180 180 0
+
+
+##
+## Ecliptic Coord Sphere
+## ------------------------------------------------------------------------
+##
+object g18=EclipticSphere
+
+include eclip.speck
+eval cment 1 0.6 0 0
+eval cment 2 0.05 0 0
+eval alpha 0.45
+eval lsize 0.7
+eval textcment 1 1 1 1
+eval laxes off
+
+# transform the data to ecliptic coords
+eval tfm -0.05487554 0.4941095 -0.8676661 0 -0.9938214 -0.1109906 -0.0003515167 0 -0.09647644 0.8622859 0.4971472 0 0 0 0 1
+
+eval off
+
+
+##
+## Atomic Hydrogen All-Sky Survey (21cm)
+## ------------------------------------------------------------------------
+##
+object g19=MWHydrogen
+
+include mw-21cm.speck
+eval alpha 0.35
+eval tfm 0 0 0 180 0 0
+eval off
+
+
+
+##
+## Carbon Monoxide All-Sky Survey (115GHz, 2.6mm)
+## ------------------------------------------------------------------------
+##
+object g20=MWCO
+
+include mw-CO.speck
+eval alpha 0.5
+eval tfm 0 0 0 180 0 0
+eval off
+
+
+
+##
+## IRAS Far IR (100 microns)
+## ------------------------------------------------------------------------
+##
+object g21=MWIRASFIR
+
+include mw-iras100um.speck
+eval alpha 0.65
+eval tfm 0 0 0 180 0 0
+eval off
+
+
+
+##
+## IRAS MW
+## ------------------------------------------------------------------------
+##
+object g22=MWIRASc
+
+include mw-iras.speck
+eval alpha 0.75
+eval off
+
+
+##
+## 2MASS All-Sky Survey
+## ------------------------------------------------------------------------
+##
+object g23=MW2MASS
+
+include mw-2mass.speck
+eval alpha 0.65
+eval tfm 0 0 0 180 0 0
+eval off
+
+
+
+##
+## Hydrogen-alpha All-Sky Survey
+## ------------------------------------------------------------------------
+##
+object g24=MWHydrogenAlpha
+
+include mw-halpha.speck
+eval alpha 0.5
+eval off
+
+
+##
+## Gamma MW
+## ------------------------------------------------------------------------
+##
+object g25=MWGamma
+
+include mw-gamray.speck
+eval alpha 0.3
+eval tfm 0 0 0 180 0 0
+eval off
+
+##
+## 1-light-year grid and target
+## ------------------------------------------------------------------------
+##
+object g26=1LY
+
+include target1ly.speck
+include grid1ly.speck
+eval cment 1 0.1 0.1 0.5
+eval cment 2 0.1 0.5 0.1
+eval alpha 1.0
+eval labelsize 0.025
+eval labelmin 8
+eval textcment 1 0.3 0.3 0.6
+eval laxes off
+eval off
+
+
+
+##
+## 10-light-year grid and target
+## ------------------------------------------------------------------------
+##
+object g27=10LY
+
+include target10ly.speck
+include grid10ly.speck
+eval cment 1 0.1 0.1 0.5
+eval cment 2 0.1 0.5 0.1
+eval alpha 1.0
+eval labelsize 0.25
+eval labelmin 8
+eval textcment 1 0.3 0.3 0.6
+eval laxes off
+eval off
+
+
+
+##
+## 100-light-year grid and target
+## ------------------------------------------------------------------------
+##
+object g28=100LY
+
+include target100ly.speck
+include grid100ly.speck
+eval cment 1 0.1 0.1 0.5
+eval cment 2 0.1 0.5 0.1
+eval alpha 1.0
+eval labelsize 2.5
+eval labelmin 8
+eval textcment 1 0.3 0.3 0.6
+eval laxes off
+eval off
+
+
+
+##
+## 1,000-light-year grid and target
+## ------------------------------------------------------------------------
+##
+object g29=1KLY
+
+include target1kly.speck
+include grid1kly.speck
+eval cment 1 0.1 0.1 0.5
+eval cment 2 0.1 0.5 0.1
+eval alpha 1.0
+eval labelsize 25.0
+eval labelmin 8
+eval textcment 1 0.3 0.3 0.6
+eval laxes off
+eval off
+
+
+
+##
+## 10,000-light-year grid and target
+## ------------------------------------------------------------------------
+##
+object g30=10KLY
+
+include target10kly.speck
+include grid10kly.speck
+eval cment 1 0.1 0.1 0.5
+eval cment 2 0.1 0.5 0.1
+eval alpha 1.0
+eval labelsize 150.0
+eval labelmin 8
+eval textcment 1 0.3 0.3 0.6
+eval laxes off
+eval off
+
+
+##
+## Dwarf Catalog
+## ------------------------------------------------------------------------
+##
+object g31=Dwarfs
+
+include dwarfs.speck
+include dwarfs.label
+eval fast off
+eval psize 20000
+eval ptsize 8 16
+eval points on
+eval lum lum 0 1
+eval slum 80.0
+eval lum const 1
+eval slum 0.01
+eval color const 0.4 0.0 0.1
+eval polylumvar point-size area
+eval polysize 2.0
+eval polysides 4
+eval alpha 1.0
+eval poly on
+eval lsize 0.5
+eval labelmin 8
+eval textcment 1 .5 .1 .2
+eval laxes off
+eval label on
+eval off
+
+##
+## Orion Nebula Model
+## ------------------------------------------------------------------------
+##
+object g32=OrionNebula
+texture -D 42 orineb-highres.dds
+directxx -texture 42 -static orion_nebula.x
+directxx -texture 42 -static orishocks.x
+directxx proplyds.x
+
+eval tfm -387.794 -215.052 -156.018 45.0018 127.119 49.674
+eval alpha 0.4
+
+##
+## Lepine Shara Proper Motion Catalog
+## ------------------------------------------------------------------------
+##
+object g33=NearStars
+
+include Lepine100parsecs.speck
+eval psize 2
+eval ptsize 0.05 2.5
+eval points on
+eval lum lum 0 1
+eval slum 0.01
+eval cmap colorbv.cmap
+eval color color -0.5 2.0
+eval polylumvar point-size area
+eval polysize 0.3
+eval polysides 4
+eval polymin 1 20                       # Clamp the poly size at 20 pixels
+eval alpha 0.9
+eval poly on
+eval laxes off
+eval label off
+eval off
+
+###
+### Selection expressions for the near stars
+###
+eval thresh absmag 10 25                # See all the intrinsically faint stars
+eval sel lowlum = thresh
+
+eval thresh appmag -2 6.5               # All the stars we see with the unaided eye
+eval sel eye = thresh
+
+eval see all
+eval off
+
+##
+## Select Stellar Orbits over 1 billion years
+## ------------------------------------------------------------------------
+##
+object g34=StarOrbits
+
+include starorbits.speck
+eval cment 1 1 0.65 0.0                 # Sun's orbit
+eval textcment 1 1 0.65 0.0
+
+eval cment 2 0.39 0.58 0.93             # Barnard's Orbit
+eval textcment 2 0.39 0.58 0.93
+
+eval cment 3 0.0 0.39 0.0               # LSR J1826+3014 Orbit
+eval textcment 3 0.0 0.39 0.0
+
+eval cment 4 0.70 0.13 0.13             # PM J13420-3415 Orbit
+eval textcment 4 0.70 0.13 0.13
+
+
+# BY DEFAULT, THE FOLLOWING 3 STARS ARE "OFF"
+# IN OTHER WORDS, THEIR COLOR IS BLACK
+eval cment 5 0 0 0                      # Kapteyns's Orbit
+eval textcment 5 0 0 0
+
+eval cment 6 0 0 0                      # Lacaille 9352's Orbit
+eval textcment 6 0 0 0
+
+eval cment 7 0 0 0                      # LSR_J0822+1700's Orbit
+eval textcment 7 0 0 0
+
+
+# IF YOU'D LIKE TO SEE THESE THREE STARS, REMOVE THE '#' FROM THE FOLLOWING COMMANDS.
+# YOU CAN PLACE A '#' BEFORE ANY cment AND textcment COMMANDS FOR STARS YOU DO NOT WANT TO SEE
+#eval cment 5 0.6 0.6 0.6               # Kapteyns's Orbit
+#eval textcment 5 0.6 0.6 0.6
+
+#eval cment 6 0.58 0.0 0.83             # Lacaille 9352's Orbit
+#eval textcment 6 0.58 0.0 0.83
+
+#eval cment 7 0.5 1.0 0                 # LSR_J0822+1700's Orbit
+#eval textcment 7 0.5 1.0 0
+
+
+eval lsize 750.0
+eval laxes off
+eval labels on
+eval alpha 0.8
+eval off
+
+##
+## Sloan Digital Sky Survey M dwarfs
+## ------------------------------------------------------------------------
+##
+object g35=sloanstars
+
+include sdssMstars.speck
+eval psize 100
+eval ptsize 0.05 2.5
+eval points on
+eval lum lum 0 1
+#eval slum 0.005
+eval slum 0.02
+#eval cmap stars/specks/colorbv.cmap
+#eval color Rabsmag -0.5 2.0
+eval color const 1.0 0.3 0.0           # set a const color
+eval polylumvar point-size area
+eval polysize 0.2
+eval polysides 4
+eval polymin 1 
+eval alpha 0.9
+eval poly on
+eval label off
+eval off
+
+
+
+
