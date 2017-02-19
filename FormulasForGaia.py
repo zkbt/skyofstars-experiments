@@ -63,7 +63,7 @@ def ParallaxToDistance(P):
     
     Returns:
     ----------------------------------------------
-    Array of the distannces from the Earth of a group of stars in AU
+    Array of the distances from the Earth of a group of stars in AU
     """
     #Calculate distance in parseconds:
     distance = 1/P
@@ -73,3 +73,14 @@ def ParallaxToDistance(P):
     
     return distanceAU
 
+def AbsoluteMagnitude(distances,magnitudes):
+    """
+    Use fluxes and distances to calculate the absolute magnitude of the stars
+    """
+    DistancesInParsec= disrances*(1/())
+    M = magnitudes-5*np.log10(DistncesInParsec/10)
+    
+    return M
+
+make a 2d image that we can put stars onto
+we can plot on this image - each ellipse plot ... explore matplot lib to have a dark background and stars be white and size is proportional to their flux 
