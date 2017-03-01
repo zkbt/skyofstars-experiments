@@ -155,6 +155,11 @@ def fileForFiske(filename):
     DZ = np.zeros_like(X)
     BV = np.zeros_like(X)
 
+    # ZKBT: slight change, to save in parsecs instead of AU
+    au_per_pc = 180/np.pi*60*60
+    X = X/au_per_pc
+    Y = Y/au_per_pc
+    Z = Z/au_per_pc
     table = astropy.table.Table([ID, X, Y, Z, DX, DY, DZ, BV, AbsoluteMagnitudes],
         names=['ID', 'X', 'Y', 'Z', 'DX', 'DY', 'DZ', 'BV', 'AbsMag'])
 
