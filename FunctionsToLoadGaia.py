@@ -38,15 +38,19 @@ def extractStars(filename):
     ok1 = fraction < 0.2
     ok2 = table['parallax']>0
     ok = ok1*ok2
-    ##ok3???
 
     #From the table, extract parallax and other useful info, take only those rows for which [ok] is true:
     Parallax= table['parallax'].data[ok] #.data takes only the numbers, getting rid of the tittle of the column
     Parallax = Parallax/1000 # ZKBT: the GAIA parallaxes are in units of milliarcseconds; let's convert to arcsec
-    Dec = (table['dec'].data[ok])*(pi/180) #changing RA and DEC to radians.
-    RA = (table['ra'].data[ok])*(pi/180)
+    Dec = (table['dec'].data[ok])*(pi/180) #change degrees to radians.
     Fluxes= table['phot_g_mean_flux'].data[ok]
     Magnitudes = table['phot_g_mean_mag'].data[ok]
+    
+    RA = (table['ra'].data[ok])
+    over180 = RA > 180 #want RA values to be from -180 to 180
+    RA[over180] = (RA[over180] - 360)
+    RA = RA*(pi/180) #change degrees to radians.
+    
 
     #Use formulas to produce more useful arrays:
     Distances = F.ParallaxToDistance(Parallax)
@@ -130,6 +134,7 @@ def CreateTxtFile(X,Y,Z,AbsoluteMagnitudes,label):
     t = astropy.table.Table([X, Y,Z,AbsoluteMagnitudes], names=['X', 'Y','Z','Absolute Magnitudes'])
     a.write(t, '{}.txt'.format(label),format='fixed_width')
 
+
 def convertTgasFile(filename):
 
     """
@@ -142,6 +147,7 @@ def convertTgasFile(filename):
 
     return "Good job Luci"
 
+    
 def fileForFiske(filename):
     """
     This function uses creates a text file, whose name depends on the filename.
