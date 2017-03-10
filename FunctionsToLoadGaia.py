@@ -48,6 +48,8 @@ def extractStars(filename):
     Parallax = Parallax/1000 # ZKBT: the GAIA parallaxes are in units of milliarcseconds; let's convert to arcsec
     negative = Parallax<0
     Parallax[negative] = 10**(-6)
+    uncertainty = (table['parallax_error']/table['parallax']) > 0.5
+    Parallax[uncertainty] = 10**(-6)
     
     Dec = (table['dec'].data)*(pi/180) #change degrees to radians.
     Fluxes= table['phot_g_mean_flux'].data
