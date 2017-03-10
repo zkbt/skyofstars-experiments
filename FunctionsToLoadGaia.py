@@ -34,24 +34,30 @@ def extractStars(filename):
     table = astropy.table.Table(hdu[1].data)
 
     #Create a statement to get rid of stars with parallax error larger than 20% or with negative distances:
-    fraction = np.abs(table['parallax_error']/table['parallax'])
-    ok1 = fraction < 0.2
-    ok2 = table['parallax']>0
-    ok = ok1*ok2
-
-    #From the table, extract parallax and other useful info, take only those rows for which [ok] is true:
-    Parallax= table['parallax'].data[ok] #.data takes only the numbers, getting rid of the tittle of the column
-    Parallax = Parallax/1000 # ZKBT: the GAIA parallaxes are in units of milliarcseconds; let's convert to arcsec
-    Dec = (table['dec'].data[ok])*(pi/180) #change degrees to radians.
-    Fluxes= table['phot_g_mean_flux'].data[ok]
-    Magnitudes = table['phot_g_mean_mag'].data[ok]
+#    fraction = np.abs(table['parallax_error']/table['parallax'])
+#    ok1 = fraction < 0.2
+#    ok2 = table['parallax']>0
+#    ok = ok1*ok2
+# add [ok] after .data to make use of the info above    
     
-    RA = (table['ra'].data[ok])
+    #From the table, extract parallax and other useful info, take only those rows for which [ok] is true:
+    
+    
+    Parallax= table['parallax'].data #.data takes only the numbers, getting rid of the tittle of the column
+    
+    Parallax = Parallax/1000 # ZKBT: the GAIA parallaxes are in units of milliarcseconds; let's convert to arcsec
+    negative = Parallax<0
+    Parallax[negative] = 10**(-6)
+    
+    Dec = (table['dec'].data)*(pi/180) #change degrees to radians.
+    Fluxes= table['phot_g_mean_flux'].data
+    Magnitudes = table['phot_g_mean_mag'].data
+    
+    RA = (table['ra'].data)
     over180 = RA > 180 #want RA values to be from -180 to 180
     RA[over180] = (RA[over180] - 360)
     RA = RA*(pi/180) #change degrees to radians.
     
-
     #Use formulas to produce more useful arrays:
     Distances = F.ParallaxToDistance(Parallax)
     X,Y,Z= F.toXYZ(RA,Dec,Distances)
@@ -142,9 +148,10 @@ def convertTgasFile(filename):
 
     """
     X,Y,Z,RA,Dec,Magnitudes,Distances,AbsoluteMagnitudes,Fluxes, label = extractStars(filename)
-    CreateTxtFile(X,Y,Z,AbsoluteMagnitudes,label)
+#    CreateTxtFile(X,Y,Z,AbsoluteMagnitudes,label)
     PlotStars(X,Y,Z,RA,Dec,Distances,Fluxes,label)
-
+#    fileForFiske(filename)
+    
     return "Good job Luci"
 
     

@@ -2,6 +2,7 @@
 
 import numpy as np
 from math import pi
+from astropy.coordinates import SkyCoord
 
 def toXYZ(RA,DEC,Distance): #,Parallax
     """
@@ -21,10 +22,15 @@ def toXYZ(RA,DEC,Distance): #,Parallax
     stars included, in parsecs.
 
     """
-    r=Distance*(np.cos(DEC))
-    z=Distance*(np.sin(DEC))
-    y=r*(np.sin(RA))
-    x=r*(np.cos(RA))
+    
+    c = SkyCoord(RA,DEC,frame='icrs',unit='rad')
+    longitude = c.galactic.l.rad
+    latitude = c.galactic.b.rad
+    
+    r=Distance*(np.cos(latitude))
+    z=Distance*(np.sin(latitude))
+    y=r*(np.sin(longitude))
+    x=r*(np.cos(longitude))
 
     return x,y,z
 
