@@ -4,7 +4,7 @@ import numpy as np
 from math import pi
 from astropy.coordinates import SkyCoord
 
-def toXYZ(RA,DEC,Distance): #,Parallax
+def toXYZ(RA,DEC,Distance): #Parallax
     """
     This function converts RA, Dec and Distance into
     X,Y and Z coordinates.
@@ -19,11 +19,11 @@ def toXYZ(RA,DEC,Distance): #,Parallax
     Returns:
     ---------------------------------------------------
     X,Y,Z arrays of the x,y,z coordinates of all the
-    stars included, in parsecs.
+    stars included, in radians.
 
     """
     
-    c = SkyCoord(RA,DEC,frame='icrs',unit='rad')
+    c = SkyCoord(RA,DEC,frame='icrs',unit='rad') #use skycoord modules so coordinates are in radians
     longitude = c.galactic.l.rad
     latitude = c.galactic.b.rad
     
@@ -89,7 +89,7 @@ def AbsoluteMagnitude(distances,magnitudes):
     ----------------------------------------
     Distances =  Array of the star's distances, calculated from the parallax
     of the Tgas files.
-    Magnitudes =
+    Magnitudes = Array of magnitudes, taken from the Tgas files. 
 
     """
     inParsec= distances*(1.0/(360.0/(2.0*pi)*3600.0))

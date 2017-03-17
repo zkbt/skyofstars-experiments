@@ -1,8 +1,8 @@
-'This module contains functions to help load a gaia file in the desired form'
+'This module contains functions to help load and use a Gaia fits file'
 
 import numpy as np
 import matplotlib.pyplot as plt
-#%matplotlib inline - I m not sure if the module requires this
+#%matplotlib inline - I'm not sure if a module requires this. Ask ZKBT.
 from math import pi
 import astropy.io.ascii as a
 import astropy.io.fits
@@ -16,7 +16,8 @@ def extractStars(filename):
     """
     This function will read in a TGAS FITS file and extract the information that the
     Sky Of Stars project will be working with.
-    It will only use the data from stars whose parallax error is less than 20%.
+    This function will replace parallaxes that are negative or with an uncertainty greater than 50%
+    with the value 10^-6 arcseconds. This is done to use all the stars without having them be too             different than the rest
 
     Parameters:
     ------------------------------------------------------------------
@@ -26,7 +27,7 @@ def extractStars(filename):
     ------------------------------------------------------------------
     Arrays for X,Y and Z positions and arrays for right ascencion, declination, magnitudes,
     distances and absolute magnitudes.
-    label: A
+    label: A specific number that comes from the file name, used to identify each file. 
 
     """
     #Read the file into a table:
@@ -40,17 +41,17 @@ def extractStars(filename):
 #    ok = ok1*ok2
 # add [ok] after .data to make use of the info above    
     
+    
+    
     #From the table, extract parallax and other useful info, take only those rows for which [ok] is true:
     
+    Parallax= table['parallax'].data #.data takes only the numbers, getting rid of the tittle of the         column
     
-    Parallax= table['parallax'].data #.data takes only the numbers, getting rid of the tittle of the column
-    
-    Parallax = Parallax/1000 # ZKBT: the GAIA parallaxes are in units of milliarcseconds; let's convert to arcsec
+    Parallax = Parallax/1000 # ZKBT: the GAIA parallaxes are in units of milliarcseconds; let's convert       to arcsec
     negative = Parallax<0
-    Parallax[negative] = 10**(-6)
+    Parallax[negative] = 10**(-6) #replace al negative parallaxes with 10^-6 arcseconds
     uncertainty = (table['parallax_error']/table['parallax']) > 0.5
-    Parallax[uncertainty] = 10**(-6)
-    
+    Parallax[uncertainty] = 10**(-6) #replace all parallaxes with uncertainty greater than 50% with 10^-6     arcseconds
     Dec = (table['dec'].data)*(pi/180) #change degrees to radians.
     Fluxes= table['phot_g_mean_flux'].data
     Magnitudes = table['phot_g_mean_mag'].data
@@ -60,7 +61,7 @@ def extractStars(filename):
     RA[over180] = (RA[over180] - 360)
     RA = RA*(pi/180) #change degrees to radians.
     
-    #Use formulas to produce more useful arrays:
+    #Use formulas to produce other useful arrays:
     Distances = F.ParallaxToDistance(Parallax)
     X,Y,Z= F.toXYZ(RA,Dec,Distances)
     AbsoluteMagnitudes = F.AbsoluteMagnitude(Distances,Magnitudes)
@@ -75,7 +76,7 @@ def extractStars(filename):
 def PlotStars(X,Y,Z,RA,Dec,Distances,Fluxes,label):
     """
     This function creates demonstraation plots and saves each in a file with name
-    dependent on the Gaia file it comes from
+    dependent on the Gaia Fits file the information it comes from.
 
     Parameters:
     -------------------------------------------------------------------
@@ -85,11 +86,12 @@ def PlotStars(X,Y,Z,RA,Dec,Distances,Fluxes,label):
     Returns and Saves:
     --------------------------------------------------------------------
     4 plots: x vs y position, x vs z position, y vs z position and RA vs Dec.
-    The title of each plot
+    The title of each plot is dependant on the label, which is dependant on the file the information came 
+    from
 
     """
     plt.figure(figsize=(9,9))
-    plt.scatter(X,Y,s = Fluxes/1000000,alpha=0.1)
+    plt.scatter(X,Y,s = Fluxes/1000000,alpha=0.1)#make size flux dependant and each point transparent
     plt.xlim(np.min(X),np.max(X))
     plt.ylim(np.min(Y),np.max(Y))
     plt.xlabel('X Coordinates')
@@ -126,13 +128,13 @@ def PlotStars(X,Y,Z,RA,Dec,Distances,Fluxes,label):
 
 def CreateTxtFile(X,Y,Z,AbsoluteMagnitudes,label):
     """
-    This functions create a text file that is label dependant, and contains a list of
-    X,Y,and Z positions, and absolute magnitude of each star
+    This functions create a label dependant, it contains a list of
+    X,Y,and Z positions, and absolute magnitude of each star.
 
     Parameters:
     --------------------------------------------------------
     X,Y,Z,AbsoluteMagnitudes arrays.
-    label:string dependant on file name, also obtained with the "extractStars"function.
+    label:string dependant on file name, obtained with the "extractStars"function.
 
     Saves:
     ---------------------------------------------------------
@@ -146,22 +148,29 @@ def CreateTxtFile(X,Y,Z,AbsoluteMagnitudes,label):
 def convertTgasFile(filename):
 
     """
-    This function uses the functions extractStars, CreateTcxtFile and PlotStars
+    This function uses the functions extractStars, CreateTcxtFile, PlotStars and fileForFiske.
 
     """
     X,Y,Z,RA,Dec,Magnitudes,Distances,AbsoluteMagnitudes,Fluxes, label = extractStars(filename)
-#    CreateTxtFile(X,Y,Z,AbsoluteMagnitudes,label)
+    CreateTxtFile(X,Y,Z,AbsoluteMagnitudes,label)
     PlotStars(X,Y,Z,RA,Dec,Distances,Fluxes,label)
-#    fileForFiske(filename)
+    fileForFiske(filename)
     
     return "Good job Luci"
 
     
 def fileForFiske(filename):
     """
-    This function uses creates a text file, whose name depends on the filename.
-    The text file contains a column for each ID number, X,Y and Z positions, dx, dy, dz velocities, BV and absolute magnitude.
-    dx, dy, dz and bv are empty columns but serve as place holders.
+    Create a text file for Fiske.
+    Parameters:
+    -------------------------------
+    filename, of a Gaia Tgas file. 
+    
+    Returns:
+    -------------------------------
+    A file with a name determined by the filename.
+    Text file contains a column for each: ID number, X,Y and Z positions, dx, dy, dz velocities, BV and       absolute magnitude.
+    dx, dy, dz and bv are empty columns but work as place holders.
     """
     X,Y,Z,RA,Dec,Magnitudes,Distances,AbsoluteMagnitudes,Fluxes,label = extractStars(filename)
     ID = np.arange(len(X))
