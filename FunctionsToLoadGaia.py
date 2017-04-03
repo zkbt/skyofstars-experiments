@@ -97,7 +97,7 @@ def PlotStars(X,Y,Z,RA,Dec,Distances,Fluxes,label):
     plt.xlabel('X Coordinates')
     plt.ylabel('y coordinates')
     plt.title('X vs Y for {}'.format(label))
-    plt.savefig('XY_{}'.format(label))
+    plt.savefig('XY_{}'.format(label)) #save the graph
 
     plt.figure(figsize=(9,9))
     plt.scatter(X,Z,s = Fluxes/1000000,alpha=0.1)

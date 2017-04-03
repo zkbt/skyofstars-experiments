@@ -91,8 +91,46 @@ def AbsoluteMagnitude(distances,magnitudes):
     of the Tgas files.
     Magnitudes = Array of magnitudes, taken from the Tgas files. 
 
+    Returns:
+    -----------------------------------------
+    AbM = Array of the absolute magnitudes of the stars 
     """
     inParsec= distances*(1.0/(360.0/(2.0*pi)*3600.0))
-    M = magnitudes-5*np.log10(inParsec/10)
+    AbM = magnitudes-5*np.log10(inParsec/10)
     
-    return M
+    return AbM
+
+def toCelestianCoordinates (X,Y,Z):
+    """
+    This function converts X,Y and Z coordinates into
+    Right ascenceion, declination and distance for each star of the set
+    
+    Parameters: 
+    ------------------------------------------
+    X,Y,Z = Arrays of the x,y and z coordinates for a set of stars.
+    
+    Returns:
+    ------------------------------------------
+    RA = array of the right ascencion of each star.
+    Dec = array of the declination of each star. 
+    Distances = array of the distances to each star. 
+    
+    """
+    ## opposite...
+    #c = SkyCoord(RA,DEC,frame='icrs',unit='rad') #use skycoord modules so coordinates are in radians
+    #longitude = c.galactic.l.rad
+    #latitude = c.galactic.b.rad
+    
+    #r=Distance*(np.cos(latitude))
+    #z=Distance*(np.sin(latitude))
+    #y=r*(np.sin(longitude))
+    #x=r*(np.cos(longitude))
+    
+    #NotOppposite 
+    #longitude=
+    #latitude=
+    #Ra= 
+    #Dec= 
+    #Distance=
+    
+    #return RA, Dec, Distance
